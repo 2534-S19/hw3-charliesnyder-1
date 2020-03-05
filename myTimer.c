@@ -1,8 +1,8 @@
 /*
  * myTimer.c
  *
- *  Created on:
- *      Author:
+ *  Created on: 3/4/2020
+ *      Author: Charlie Snyder
  */
 
 #include <ti/devices/msp432p4xx/driverlib/driverlib.h>
@@ -13,12 +13,14 @@
 void initTimer(unsigned int timer, unsigned int preScaler, unsigned int count)
 {
     // For the specified timer and pre-scale value, put the timer in 32-bit periodic mode.
+    Timer32_initModule(timer, preScaler, TIMER32_32BIT, TIMER32_PERIODIC_MODE);
 
 
     // For the specified timer, pass the count value.
-
+    Timer32_setCount(timer, count);
 
     // For the specified timer, configure the timer to repeat once it elapses.
+    Timer32_startTimer(timer, REPEAT);
 
 }
 
@@ -26,6 +28,17 @@ void initTimer(unsigned int timer, unsigned int preScaler, unsigned int count)
 // You have been given a such a function in the lecture slides.
 bool timer0Expired(void)
 {
+    //Timer32_initModule(uint32_t timer, uint32_t preScaler, uint32_t resolution, uint32_t mode);
+
+    static unsigned int previousSnap = MAX_VALUE;
+    unsigned int currentSnap;
+    bool returnValue;
+
+    currentSnap = Timer32_getValue(TIMER32_0_BASE);
+    returnValue = (currentSnap > previousSnap);
+    previousSnap = currentSnap;
+
+    return returnValue;
 
 }
 
@@ -34,5 +47,21 @@ bool timer0Expired(void)
 // Since we only have two timers, later in the course we will create software timers that use a common time base.
 bool timer1Expired(void)
 {
+    //Timer32_initModule(uint32_t timer, uint32_t preScaler, uint32_t resolution, uint32_t mode);
+
+    static unsigned int previousSnap1 = MAX_VALUE;
+    unsigned int currentSnap1;
+    bool returnValue1;
+
+    currentSnap1 = Timer32_getValue(TIMER32_1_BASE);
+    returnValue1 = (currentSnap1 > previousSnap1);
+    previousSnap1 = currentSnap1;
+
+    return returnValue1;
+
 
 }
+
+
+//timer 0 seconds
+//timer 1 milliseconds
